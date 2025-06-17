@@ -6,12 +6,14 @@ import java.util.Scanner;
 public class Technician extends Person {
     private String phone;
     private String skillset;
+    private String status; 
 
-    public Technician(int id, String name,String phone, String skillset) {
+    public Technician(int id, String name,String phone, String skillset,String status) {
         this.id = id;
         this.name = name;
         this.phone=phone;
         this.skillset = skillset;
+        this.status=status;
     }
     public int getId(){
         return id;
@@ -25,7 +27,9 @@ public class Technician extends Person {
     public String getPhone(){
         return phone;
     }
-
+    public String getStatus(){
+        return status;
+    }
 
     @Override
     public void displayInfo() {
@@ -47,7 +51,9 @@ public class Technician extends Person {
         sc.nextLine();
         System.out.println("Enter the Skillset");
         String skillset=sc.nextLine();
-        Technician T=new Technician(id, name, phone, skillset);
+        System.out.println("Enter your current status: Either busy or free");
+        String status=sc.next();
+        Technician T=new Technician(id, name, phone, skillset,status);
         TechnicianCrud.insertTechnician(T);
         }
         else if(n==2){

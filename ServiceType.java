@@ -42,6 +42,7 @@ public class ServiceType {
     }
     public static void ma() {
         Scanner sc=new Scanner(System.in);
+        while(true){
         System.out.println("Enter the Move that you want to take (only integer value) \n 1 for Insert Record \n 2 for Deletion of Record: \n 3 for Updation of record : \n 4 for Feteching out Records");
         int n=sc.nextInt();
         if(n==1){
@@ -101,9 +102,12 @@ public class ServiceType {
             }
         }
         else{
-            System.out.println("You have Entered the Wrong value");
+            System.out.println("You want to exit");
+            break;
         }
         }
+        sc.close();
+    }
         
 }
 

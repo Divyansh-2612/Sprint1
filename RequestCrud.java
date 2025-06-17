@@ -5,8 +5,8 @@ import java.util.List;
 
 public class RequestCrud {
 
-    public void addRequest(Request request) {
-        String query = "INSERT INTO request (citizen_id, technician_id, service_id, status, priority, request_date) VALUES (?, ?, ?, ?, ?, ?)";
+    public static void addRequest(Request request) {
+        String query = "INSERT INTO request (citizen_id,technician_id,service_id, status, priority, request_date) VALUES (?, ?, ?, ?, ?,?)";
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement pst = con.prepareStatement(query)) {
@@ -45,7 +45,7 @@ public class RequestCrud {
                 String priorityStr = rs.getString("priority");
                 LocalDate requestDate = rs.getDate("request_date").toLocalDate();
 
-                Request req = new Request(id, citizenId, technicianId, serviceId,
+                Request req = new Request(id, citizenId, serviceId,
                         Status.valueOf(statusStr), Priority.valueOf(priorityStr), requestDate);
 
                 requests.add(req);

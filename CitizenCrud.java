@@ -181,7 +181,7 @@ public static boolean updateCitizenById(int id,String email, String newName, Str
         pst.setString(2, newPhoneNumber);
         pst.setString(3, newAddress);
         pst.setString(4, email);
-        pst,setInt(5,id);
+        pst.setInt(5,id);
 
         int rowsUpdated = pst.executeUpdate();
         if (rowsUpdated > 0) {

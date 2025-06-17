@@ -8,7 +8,7 @@ import java.util.List;
 public class TechnicianCrud {
 
     public static void insertTechnician(Technician technician) {
-        String query = "INSERT INTO Technician (technician_id, name, phone, skillset) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO Technician (technician_id, name, phone, skillset,status) VALUES (?, ?, ?, ?,?)";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -17,6 +17,7 @@ public class TechnicianCrud {
             stmt.setString(2, technician.getName());
             stmt.setString(3, technician.getPhone());
             stmt.setString(4, technician.getSkillset());
+            stmt.setString(5, technician.getStatus());
 
             int rowsInserted = stmt.executeUpdate();
             if (rowsInserted > 0) {
@@ -42,8 +43,9 @@ public class TechnicianCrud {
                 String name = rs.getString("name");
                 String phone = rs.getString("phone");
                 String skillset = rs.getString("skillset");
+                String status=rs.getString("Status");
 
-                Technician citizen = new Technician(id, name, phone, skillset);
+                Technician citizen = new Technician(id, name, phone, skillset,status);
                 Tech.add(citizen);
             }
 
@@ -122,7 +124,7 @@ public class TechnicianCrud {
     return false;
 }
 public static boolean updateTechnicianById(int id, String newName, String newPhoneNumber, String skillset){
-    String query = "UPDATE citizen SET name = ?, phone = ?, skillset = ? , WHERE citizen_Id = ?";
+    String query = "UPDATE Technician SET name = ?, phone = ?, skillset = ? , WHERE citizen_Id = ?";
 
     try (Connection con = DBConnection.getConnection();
          PreparedStatement pst = con.prepareStatement(query)) {

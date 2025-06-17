@@ -1,127 +1,112 @@
-import java.time.LocalDateTime;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Request {
     private int requestId;
     private int citizenId;
-    private int serviceTypeId;
-    private String description;
-    private int priority; // 1 - High, 2 - Medium, 3 - Low
-    private String status; // e.g., Pending, In Progress, Resolved
-    private LocalDateTime dateSubmitted;
-    private Integer technicianId; // Nullable
+    private int technicianId;
+    private int serviceId;
+    private Status status;
+    private Priority priority;
+    private LocalDate submissionDate;
 
-    // Constructor
-    public Request(int requestId, int citizenId, int serviceTypeId, String description,
-                   int priority, String status, LocalDateTime dateSubmitted, Integer technicianId) {
-        this.requestId = requestId;
-        this.citizenId = citizenId;
-        this.serviceTypeId = serviceTypeId;
-        this.description = description;
-        this.priority = priority;
-        this.status = status;
-        this.dateSubmitted = dateSubmitted;
-        this.technicianId = technicianId;
-    }
+public Request(int requestId, int citizenId,int technicianId, int serviceId,
+               Status status, Priority priority, LocalDate submissionDate) {
+    this.requestId = requestId;
+    this.citizenId = citizenId;
+    this.technicianId=technicianId;
+    this.serviceId = serviceId;
+    this.status = status;
+    this.priority = priority;
+    this.submissionDate = submissionDate;}
 
-    // Getters and Setters
+    // Getters
     public int getRequestId() {
         return requestId;
-    }
-
-    public void setRequestId(int requestId) {
-        this.requestId = requestId;
     }
 
     public int getCitizenId() {
         return citizenId;
     }
 
-    public void setCitizenId(int citizenId) {
-        this.citizenId = citizenId;
-    }
-
-    public int getServiceTypeId() {
-        return serviceTypeId;
-    }
-
-    public void setServiceTypeId(int serviceTypeId) {
-        this.serviceTypeId = serviceTypeId;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getDateSubmitted() {
-        return dateSubmitted;
-    }
-
-    public void setDateSubmitted(LocalDateTime dateSubmitted) {
-        this.dateSubmitted = dateSubmitted;
-    }
-
-    public Integer getTechnicianId() {
+    public int getTechnicianId() {
         return technicianId;
     }
 
-    public void setTechnicianId(Integer technicianId) {
-        this.technicianId = technicianId;
+    public int getServiceId() {
+        return serviceId;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public Priority getPriority() {
+    return priority;
+    }
+
+    public LocalDate getSubmissionDate() {
+        return submissionDate;
+    }
+
+    // Optional: toString() for printing
     @Override
     public String toString() {
         return "Request{" +
                 "requestId=" + requestId +
                 ", citizenId=" + citizenId +
-                ", serviceTypeId=" + serviceTypeId +
-                ", description='" + description + '\'' +
-                ", priority=" + priority +
+                ", technicianId"+ technicianId +
+                ", serviceId=" + serviceId +
                 ", status='" + status + '\'' +
-                ", dateSubmitted=" + dateSubmitted +
-                ", technicianId=" + technicianId +
+                ", priority=" + priority.name() +
+                ", submissionDate=" + submissionDate +
                 '}';
     }
-    public static void main(String[] args) {
+    public static void requestRaised(int ids) throws SQLException{
         Scanner sc=new Scanner(System.in);
+        LocalDate d=LocalDate.now();
+        String[] arr={" Sanitation & Waste Management","Electricity & Lighting","Roads & Transport","Parks & Environment","Property & Building","Water Supply","Public Safety","Administrative Requests"};
+        System.out.println("Enter the Request that you want to raise among: \n 1  Sanitation & Waste Management\n  2 Electricity & Lighting \n 3 Roads & Transport \n 4 Parks & Environment \n 5 Property & Building\n 6 Water Supply\n 7 Public Safety\n 8 Administrative Requests");
+        int n=sc.nextInt();
+        String serviceraised=arr[n-1].toLowerCase();
+        System.out.println(serviceraised);
+        int id=0;
+        String Query="Select service_id from servicetype where typename= ?";
+        try(Connection con=DBConnection.getConnection()){
+            PreparedStatement pst=con.prepareStatement(Query);
+            pst.setString(1, serviceraised);
+            ResultSet rs=pst.executeQuery();
+            if(rs.next()){
+                id=rs.getInt("service_id");
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        String Q="Select technician_id from technician where skillset = ? and status= ?";
+        int tid=0;
+        try(Connection con=DBConnection.getConnection()){
+            PreparedStatement ps=con.prepareStatement(Q);
+            ps.setString(1, serviceraised);
+            ps.setString(2, "free");
+            ResultSet rd=ps.executeQuery();
+            if(rd.next()){
+               tid=rd.getInt("technician_id");
+            }
+            else{
+                System.out.println("No Technician is free");
+            }
+        }
+        Status status=Status.PENDING;
+        System.out.println("Enter the priority as per rewuired among: \n High \n Medium \n Low");
+        String prior=sc.next().toUpperCase();
+        Priority P=Priority.valueOf(prior);
         System.out.println("Enter the request id");
-        int requestId=sc.nextInt();
-        System.out.println("Enter the citizen Id");
-        int citizenId=sc.nextInt();
-        System.out.println("Enter the service id:");
-        int serviceTypeId=sc.nextInt();
-        sc.nextLine();
-        System.out.println("Enter the description:");
-        String description=sc.nextLine();
-        System.out.println("Enter the priority");
-        int priority=sc.nextInt();
-        System.out.println("Enter the status:");;
-        String status=sc.next();
-        System.out.println("Enter the date of submitiion");
-        LocalDateTime dateSubmitted=LocalDateTime.now();
-        System.out.println("Enter the Technician Id:");
-        Integer technicianId=sc.nextInt();
-        Request R=new Request(requestId, citizenId, serviceTypeId, description, priority, status, dateSubmitted, technicianId);
-        RequestInsertion.insertRequest(R);
-    }
-}
+        Request r=new Request(sc.nextInt(), ids,tid, id, status, P, d);
+        RequestCrud.addRequest(r);
+    }}

@@ -128,7 +128,7 @@ public class Citizen extends Person {
         else{
             System.out.println("You have Entered the Wrong value");
         }
-        
+        sc.close();
 
     }
 }
